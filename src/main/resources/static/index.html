@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>企业微信一键建群应用</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.4.9/theme-chalk/index.css" rel="stylesheet">
+    <script src="https://cdn.bootcss.com/vue/2.5.17/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue-resource/1.5.1/vue-resource.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.4.9/index.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+
+    <style>
+        /*#top {*/
+        /*    !*background: #20A0FF;*!*/
+        /*    padding: 5px;*/
+        /*    !*overflow: hidden*!*/
+        /*}*/
+        /*.item .el-form-item_label{*/
+        /*    color: wheat;*/
+        /*}*/
+    </style>
+
+</head>
+<body>
+<div id="job">
+    <p style="text-align:center;padding-bottom: 20px">企业微信一键建群应用</p>
+    <div style="text-align:center">
+        <p style="display:inline;width:20%">设置群名</p>
+        <el-input v-model="message_groupName" placeholder="输入群名称，可为空" maxlength="50" style="width:50%;text-align:center;padding-bottom:12px;padding-right:20px"></el-input>
+        <br/>
+        <p style="display:inline;width:20%">设置群主</p>
+        <el-input v-model="message_owner" placeholder="输入群主用户id，可为空" style="width:50%;text-align:center;padding-bottom:12px;padding-right:20px"></el-input>
+<!--        <el-button size="small" type="primary" plain @click="search" :loading="loading" icon="el-icon-search">查询</el-button>-->
+        <br/>
+        <el-button size="small" type="primary" plain @click="submit" icon="el-icon-plus">确认建群</el-button>
+    </div>
+    <br/>
+    <div>
+        <el-table ref="jobTable" :data="tableData" style="width:100%" @selection-change="changeCheckBoxValue" border center>
+            <el-table-column type="selection" ></el-table-column>
+            <el-table-column prop="name" label="用户名称" show-overflow-tooltip align="center"></el-table-column>
+            <el-table-column prop="department" label="用户所在部门" sortable align="center" :formatter="formatState"></el-table-column>
+            <el-table-column prop="userid" label="用户ID" align="center"></el-table-column>
+        </el-table>
+    </div>
+</div>
+
+<footer align="center">
+    <p>&copy; 企业微信 一键建群页面demo</p>
+</footer>
+
+<script>
+    var vue = new Vue({
+        el: "#job",
+        data: {
+            //群名、群主表单数据
+            message_groupName: '',
+            message_owner: '',
+            //复选框数据
+            checkBoxData: [],
+            //表格当前页数据
+            tableData: [],
+            //请求的URL
+            url: 'api/userlist',
+            //默认每页数据量
+            pagesize: 2,
+            //当前页码
+            currentPage: 1,
+            //查询的页码
+            start: 1,
+            //默认数据总数
+            totalCount: 1000,
+            //添加对话框默认可见性
+            dialogFormVisible: false,
+            //修改对话框默认可见性
+            updateFormVisible: false,
+            createGroupForm:{
+                userlist: [],
+                groupName: '',
+                owner: ''
+            },
+            loading: false
+        },
+        methods: {
+            // 获取复选框值
+            changeCheckBoxValue: function(val) {
+                this.checkBoxData = val;
+            },
+            // 格式化状态
+            formatState: function (row, column, cellValue, index) {
+                // console.log(row.department);
+                if (row.department.length>1){
+                    return row.department.join(";");
+                } else {
+                    return row.department[0];
+                }
+
+                // if (row.department[0] === 1) {
+                //     return "公司总组";
+                // } else {
+                //     return "未知状态";
+                // }
+            },
+            // 从服务器读取数据
+            loadData: function (currentPage, pagesize) {
+                this.loading = true;
+                this.$http.get('api/userlist').then(function (res) {
+                    console.log(res);
+                    this.tableData = res.body.userlist;
+                    this.totalCount = this.tableData.length;  //res.body.data.total;
+                    this.loading = false;
+                }, function () {
+                    console.log('failed');
+                });
+            },
+            // 搜索
+            search: function () {
+                this.loadData(this.currentPage, this.pagesize);
+            },
+            //提交创建群聊数据
+            submit: function () {
+                console.log(this.message);
+                console.log(this.checkBoxData);
+                var userlist = [];
+                this.checkBoxData.forEach(v =>{
+                    if (userlist.indexOf(v.userid)===-1){
+                        userlist.push(v.userid);
+                    }
+                });
+                console.log(userlist);
+                this.$http.post('/api/createChat',{
+                    userlist: userlist,
+                    groupName: this.message_groupName,
+                    owner: this.message_owner
+                }).then(function (res) {
+                    console.log(res.body);
+                    if (res.body.errcode === 0){
+                        alert('您已创建群聊成功！');
+                        vue.loadData();
+                    }else{
+                        alert('创建群聊失败，请再次尝试');
+                    }
+                })
+            }
+        }
+    });
+
+    //载入数据
+    vue.loadData();
+</script>
+
+</body>
+</html>

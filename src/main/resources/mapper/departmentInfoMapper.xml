@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ctsi.weixin.mapper.DepartmentInfoMapper">
+    <!--定时入库部门 -->
+    <insert id="insert" parameterType="com.ctsi.weixin.model.DepartmentInfo">
+            insert into deparment_info values (#{id},#{name},#{nameEn},#{parentId},#{order},#{departmentName})
+    </insert>
+    <delete id="delete">
+            delete from deparment_info
+    </delete>
+    <select id="selectById" resultType="com.ctsi.weixin.model.DepartmentInfo">
+        SELECT
+        *
+        FROM deparment_info
+        WHERE id = #{id}
+    </select>
+</mapper>

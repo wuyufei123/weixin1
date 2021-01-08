@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ctsi.weixin.mapper.TokenMapper">
+    <!--查询token -->
+    <select id="getToken" resultType="com.ctsi.weixin.model.AccessToken">
+        SELECT
+        *
+        FROM access_token
+    </select>
+    <update id="setToken" parameterType="com.ctsi.weixin.model.AccessToken">
+        update access_token SET token=#{token},time=#{time} where corp_id=#{corpId} AND corp_secret=#{corpSecret}
+    </update>
+</mapper>
