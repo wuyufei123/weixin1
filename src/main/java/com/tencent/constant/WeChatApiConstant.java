@@ -1,4 +1,4 @@
-package com.ctsi.weixin.constant;
+package com.tencent.constant;
 
 import org.springframework.stereotype.Component;
 

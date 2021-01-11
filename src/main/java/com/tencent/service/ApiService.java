@@ -1,4 +1,4 @@
-package com.ctsi.weixin.service;
+package com.tencent.service;
 import com.alibaba.fastjson.JSONObject;
 
 public interface ApiService {

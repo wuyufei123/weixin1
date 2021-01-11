@@ -1,8 +1,8 @@
-package com.ctsi.weixin.cron;
+package com.tencent.cron;
 
-import com.ctsi.weixin.mapper.TokenMapper;
-import com.ctsi.weixin.model.AccessToken;
-import com.ctsi.weixin.util.HttpClientHelper;
+import com.tencent.mapper.TokenMapper;
+import com.tencent.model.AccessToken;
+import com.tencent.util.HttpClientHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class AccessTokenCron {
     HttpClientHelper httpClientHelper;
 
     //半小时同步一次
-    @Scheduled(cron = "0 */30 * * * ? ")
+    @Scheduled(cron = "0 * * * * ? ")
     public void taskToken() {
         Map<String, String> param = new HashMap<>();
         //读库

@@ -1,6 +1,6 @@
-package com.ctsi.weixin.mapper;
+package com.tencent.mapper;
 
-import com.ctsi.weixin.model.AccessToken;
+import com.tencent.model.AccessToken;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

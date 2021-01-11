@@ -1,4 +1,4 @@
-package com.ctsi.weixin.model;
+package com.tencent.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,7 +1,7 @@
-package com.ctsi.weixin.controller;
+package com.tencent.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ctsi.weixin.service.ApiService;
+import com.tencent.service.ApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

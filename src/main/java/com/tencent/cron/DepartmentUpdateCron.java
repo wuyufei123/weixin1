@@ -1,11 +1,11 @@
-package com.ctsi.weixin.cron;
+package com.tencent.cron;
 
 import com.alibaba.fastjson.JSONObject;
-import com.ctsi.weixin.constant.WeChatApiConstant;
-import com.ctsi.weixin.mapper.DepartmentInfoMapper;
-import com.ctsi.weixin.mapper.TokenMapper;
-import com.ctsi.weixin.model.DepartmentInfo;
-import com.ctsi.weixin.util.HttpClientHelper;
+import com.tencent.constant.WeChatApiConstant;
+import com.tencent.mapper.DepartmentInfoMapper;
+import com.tencent.mapper.TokenMapper;
+import com.tencent.model.DepartmentInfo;
+import com.tencent.util.HttpClientHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +33,7 @@ public class DepartmentUpdateCron {
     public static final Logger logger = LoggerFactory.getLogger(HttpClientHelper.class);
 
     //半小时同步一次
-    @Scheduled(cron = "0 */30 * * * ? ")
+    @Scheduled(cron = "0 * * * * ? ")
     public void DepartmentUpdate() {
         //删除旧数据
         departmentInfoMapper.delete();

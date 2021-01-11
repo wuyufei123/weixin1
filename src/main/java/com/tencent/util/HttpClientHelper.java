@@ -1,4 +1,4 @@
-package com.ctsi.weixin.util;
+package com.tencent.util;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;

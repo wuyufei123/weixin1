@@ -1,6 +1,6 @@
-package com.ctsi.weixin.mapper;
+package com.tencent.mapper;
 
-import com.ctsi.weixin.model.DepartmentInfo;
+import com.tencent.model.DepartmentInfo;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

@@ -1,12 +1,12 @@
-package com.ctsi.weixin.service.impl;
+package com.tencent.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.ctsi.weixin.constant.WeChatApiConstant;
-import com.ctsi.weixin.mapper.DepartmentInfoMapper;
-import com.ctsi.weixin.mapper.TokenMapper;
-import com.ctsi.weixin.model.DepartmentInfo;
-import com.ctsi.weixin.service.ApiService;
+import com.tencent.constant.WeChatApiConstant;
+import com.tencent.mapper.DepartmentInfoMapper;
+import com.tencent.mapper.TokenMapper;
+import com.tencent.model.DepartmentInfo;
+import com.tencent.service.ApiService;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.HttpPost;
