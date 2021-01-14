@@ -112,7 +112,7 @@ public class sdkdemo {
             long msg = Finance.NewSlice();
             ret = Finance.DecryptData(sdk, s, encrypt_chat_msg, msg);
             if (ret != 0) {
-                System.out.println("getchatdata ret " + ret);
+                log.info("getchatdata ret " + ret);
                 return;
             }
             log.info("decrypt ret:" + ret + " msg:" + Finance.GetContentFromSlice(msg));
