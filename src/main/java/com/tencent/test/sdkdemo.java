@@ -1,8 +1,10 @@
 package com.tencent.test;
 
+import com.tencent.service.impl.ApiServiceImpl;
 import com.tencent.wework.Finance;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
@@ -17,6 +19,7 @@ import static org.apache.catalina.manager.Constants.CHARSET;
 
 public class sdkdemo {
     public static void main(String[] args) throws Exception {
+        final Logger log = LoggerFactory.getLogger(ApiServiceImpl.class);
         args = new String[6];
         args[0] = "1";
         args[1] = "0";
@@ -64,10 +67,10 @@ public class sdkdemo {
             long slice = Finance.NewSlice();
             ret = Finance.GetChatData(sdk, seq, limit, args[3], args[4], Integer.parseInt(args[5]), slice);
             if (ret != 0) {
-                System.out.println("getchatdata ret " + ret);
+                log.info("getchatdata ret " + ret);
                 return;
             }
-            System.out.println("getchatdata :" + Finance.GetContentFromSlice(slice));
+            log.info("getchatdata :" + Finance.GetContentFromSlice(slice));
             Finance.FreeSlice(slice);
         } else if (args[0].equals("2")) {
             //媒体
@@ -76,11 +79,11 @@ public class sdkdemo {
             while (true) {
                 long media_data = Finance.NewMediaData();
                 ret = Finance.GetMediaData(sdk, indexbuf, args[1], args[2], args[3], Integer.parseInt(args[4]), media_data);
-                System.out.println("getmediadata ret:" + ret);
+                log.info("getmediadata ret:" + ret);
                 if (ret != 0) {
                     return;
                 }
-                System.out.printf("getmediadata outindex len:%d, data_len:%d, is_finis:%d\n", Finance.GetIndexLen(media_data), Finance.GetDataLen(media_data), Finance.IsMediaDataFinish(media_data));
+                log.info("getmediadata outindex len:%d, data_len:%d, is_finis:%d\n", Finance.GetIndexLen(media_data), Finance.GetDataLen(media_data), Finance.IsMediaDataFinish(media_data));
                 try {
                     FileOutputStream outputStream = new FileOutputStream(new File(args[5]));
                     outputStream.write(Finance.GetData(media_data));
@@ -112,10 +115,10 @@ public class sdkdemo {
                 System.out.println("getchatdata ret " + ret);
                 return;
             }
-            System.out.println("decrypt ret:" + ret + " msg:" + Finance.GetContentFromSlice(msg));
+            log.info("decrypt ret:" + ret + " msg:" + Finance.GetContentFromSlice(msg));
             Finance.FreeSlice(msg);
         } else {
-            System.out.println("wrong args " + args[0]);
+            log.info("wrong args " + args[0]);
         }
         Finance.DestroySdk(sdk);
     }
@@ -137,7 +140,7 @@ public class sdkdemo {
         // byte[] dataBytes = decoder64.decode(data.getBytes(CHARSET));
         BASE64Decoder decoder = new BASE64Decoder();
         byte[] dataBytes = decoder.decodeBuffer(data);
-        //在去使用RSA PKCS1算法进行解密（长度默认128，不改会报错）
+        //在去使用RSA PKCS1算法进行解密（长度默认128）
         byte[] decrypt = decrypt(dataBytes, privateKey, 2048, 11, "RSA/ECB/PKCS1Padding");
         String s1 = new String(decrypt);
         return s1;
