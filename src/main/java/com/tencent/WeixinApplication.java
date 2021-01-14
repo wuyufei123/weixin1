@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication(scanBasePackages={"com.tencent.*"})
-@MapperScan(basePackages = "com.ctsi", annotationClass = Mapper.class)
+@MapperScan(basePackages = "com.tencent", annotationClass = Mapper.class)
 @EnableScheduling
 @Configuration
 public class WeixinApplication {
