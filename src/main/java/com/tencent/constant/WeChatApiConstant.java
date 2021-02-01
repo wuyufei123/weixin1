@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class WeChatApiConstant {
-    //用户列表头
-    public static final String USERLISTSTART = "https://qyapi.weixin.qq.com/cgi-bin/user/simplelist?access_token=";
+    //用户列表头(全量)
+    public static final String USERLISTSTART = "https://qyapi.weixin.qq.com/cgi-bin/user/list?access_token=";
     //用户列表尾
     public static final String USERLISTEND = "&department_id=1&fetch_child=1";
     //创建群聊
