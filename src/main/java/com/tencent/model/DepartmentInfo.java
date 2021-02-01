@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 /**
  * @author: wuyufei
  * @Date: 2020/12/30 11:30
- * @Description: department_info
+ * @Description: department_info部门定时跟新
  */
 @Data
 @AllArgsConstructor

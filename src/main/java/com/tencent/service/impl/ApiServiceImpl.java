@@ -3,9 +3,11 @@ package com.tencent.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.constant.WeChatApiConstant;
+import com.tencent.mapper.ChartMapper;
 import com.tencent.mapper.DepartmentInfoMapper;
 import com.tencent.mapper.TokenMapper;
 import com.tencent.mapper.UserListMapper;
+import com.tencent.model.ChatInfo;
 import com.tencent.model.DepartmentInfo;
 import com.tencent.model.UserListTemport;
 import com.tencent.service.ApiService;
@@ -27,6 +29,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
+import java.sql.Timestamp;
 
 @Service
 public class ApiServiceImpl implements ApiService {
@@ -37,6 +40,8 @@ public class ApiServiceImpl implements ApiService {
     DepartmentInfoMapper departmentInfoMapper;
     @Autowired
     UserListMapper userListMapper;
+    @Autowired
+    ChartMapper chartMapper;
 
     /**
      * @Description 获取用户列表
@@ -136,6 +141,12 @@ public class ApiServiceImpl implements ApiService {
         }
         log.info("创建群聊，返回结果：" + result);
         if (result.get("errcode").equals(0)) {
+            ChatInfo chatInfo=new ChatInfo();
+            chatInfo.setChartId(String.valueOf(result.get("chatid")));
+            chatInfo.setCreateTime(new Timestamp(System.currentTimeMillis()));
+            //chartId入库
+            chartMapper.insertChartId(chatInfo);
+            //在群聊中发送一句话
             JSONObject sendMsg = sendMsgChatGroup(result.get("chatid").toString());
             result.put("sendMsg", sendMsg.get("errcode"));
             open();

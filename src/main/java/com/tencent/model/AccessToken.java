@@ -10,7 +10,7 @@ import java.sql.Timestamp;
 /**
  * @author: wuyufei
  * @Date: 2020/12/29 10:50
- * @Description: access_token
+ * @Description: access_token定时跟新
  */
 @Data
 @NoArgsConstructor

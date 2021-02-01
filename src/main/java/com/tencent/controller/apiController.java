@@ -1,7 +1,9 @@
 package com.tencent.controller;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.service.ApiService;
+import com.tencent.service.ChartService;
 import com.tencent.service.UserListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,8 @@ public class apiController {
     private ApiService apiService;
     @Autowired
     private UserListService listService;
+    @Autowired
+    private ChartService chartService;
 
     @GetMapping("/test")
     public String test() {
@@ -43,7 +47,11 @@ public class apiController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("data", listService.userListTemport(name, mobile));
         return jsonObject;
-
     }
 
+    //获取当前应用创建的所有群聊(读库)，新增群聊时，chartId已入库
+    @RequestMapping("getAllChart")
+    public JSONArray getAllChart() {
+        return chartService.selectAllChart();
+    }
 }

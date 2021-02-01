@@ -22,4 +22,6 @@ public class WeChatApiConstant {
     public static final String DEPARMENTLIST="https://qyapi.weixin.qq.com/cgi-bin/department/list?access_token=";
     //企业微信路径
     public static final String WEIXINDIR="D:\\Program Files (x86)\\WXWork\\WXWork.exe";
+    //根据token和chartId查询信息
+    public static final String CHARTINFO="https://qyapi.weixin.qq.com/cgi-bin/appchat/get?access_token=";
 }
