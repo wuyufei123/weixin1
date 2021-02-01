@@ -5,7 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.tencent.constant.WeChatApiConstant;
 import com.tencent.mapper.DepartmentInfoMapper;
 import com.tencent.mapper.TokenMapper;
+import com.tencent.mapper.UserListMapper;
 import com.tencent.model.DepartmentInfo;
+import com.tencent.model.UserListTemport;
 import com.tencent.service.ApiService;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -33,6 +35,8 @@ public class ApiServiceImpl implements ApiService {
     TokenMapper tokenMapper;
     @Autowired
     DepartmentInfoMapper departmentInfoMapper;
+    @Autowired
+    UserListMapper userListMapper;
 
     /**
      * @Description 获取用户列表
@@ -84,6 +88,8 @@ public class ApiServiceImpl implements ApiService {
             log.info("请求用户列表成功，返回结果：" + jsonObject);
             JSONArray userlist = (JSONArray) jsonObject.get("userlist");
             resolveDepartmentName(userlist);
+            //数据更新入库
+            updateTable(userlist);
         } else {
             log.info("请求用户列表失败，错误原因：" + jsonObject.get("errmsg"));
         }
@@ -181,28 +187,46 @@ public class ApiServiceImpl implements ApiService {
 
 
     //处理入库部门列表信息
-    private void resolveDepartmentName(JSONArray userlist){
-        for (Object temp:userlist){
-            JSONObject user = (JSONObject)temp;
+    private void resolveDepartmentName(JSONArray userlist) {
+        for (Object temp : userlist) {
+            JSONObject user = (JSONObject) temp;
             JSONArray deptlist = new JSONArray();
-            for (Object t : (JSONArray)user.get("department")) {
-                DepartmentInfo departmentInfo = departmentInfoMapper.selectById((int)t);
+            for (Object t : (JSONArray) user.get("department")) {
+                DepartmentInfo departmentInfo = departmentInfoMapper.selectById((int) t);
                 deptlist.add(departmentInfo.getDepartmentName());
             }
-            user.put("department",deptlist);
+            user.put("department", deptlist);
 //            log.info(user.toString());
         }
         log.info("完成处理，用户接口返回部门名称转换");
     }
 
 
-    public  void open() {
+    public void open() {
         Runtime runtime = Runtime.getRuntime();
         Process p = null;
         try {
             p = runtime.exec(WeChatApiConstant.WEIXINDIR);
         } catch (IOException e) {
-           log.error("应用打开失败");
+            log.error("应用打开失败");
+        }
+
+    }
+
+    //前端查询用，打开页面先入库用户信息
+    public void updateTable(JSONArray jsonArray) {
+        //清除临时表数据
+        userListMapper.deleteAll();
+        if (jsonArray != null && jsonArray.size() != 0) {
+            for (int i = 0; i < jsonArray.size(); i++) {
+                UserListTemport userListTemport = new UserListTemport();
+                userListTemport.setUserid(jsonArray.getJSONObject(i).getString("userid"));
+                userListTemport.setName(jsonArray.getJSONObject(i).getString("name"));
+                userListTemport.setDepartment(jsonArray.getJSONObject(i).getString("department").replace("\"]","").replace("[\"",""));
+                userListTemport.setMobile(jsonArray.getJSONObject(i).getString("mobile"));
+                //入库
+                userListMapper.UpdateList(userListTemport);
+            }
         }
     }
 }
