@@ -7,4 +7,8 @@
     <select id="selectAllChartIdList" resultType="String">
             select chat_id from chat_info order by create_time
     </select>
+
+    <delete id="deleteById" parameterType="String">
+            delete from chat_info where chat_id=#{arg0}
+    </delete>
 </mapper>

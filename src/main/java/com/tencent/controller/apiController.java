@@ -8,6 +8,8 @@ import com.tencent.service.UserListService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api")
 public class apiController {
@@ -51,7 +53,19 @@ public class apiController {
 
     //获取当前应用创建的所有群聊(读库)，新增群聊时，chartId已入库
     @RequestMapping("getAllChart")
-    public JSONArray getAllChart() {
+    public List getAllChart() {
         return chartService.selectAllChart();
+    }
+
+    //群聊添加成员
+    @RequestMapping("addUserForChat")
+    public JSONObject  addUserForChat(@RequestBody JSONObject jsonObject){
+      return chartService.addUser(jsonObject);
+    }
+
+    //删除群
+    @RequestMapping("deleteChat")
+    public JSONObject deleteChat(@RequestBody JSONObject jsonObject){
+        return chartService.delete(jsonObject);
     }
 }

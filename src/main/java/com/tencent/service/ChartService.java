@@ -1,7 +1,12 @@
 package com.tencent.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+
+import java.util.List;
 
 public interface ChartService {
-    JSONArray selectAllChart();
+    List selectAllChart();
+    JSONObject addUser(JSONObject jsonObject);
+    JSONObject delete(JSONObject jsonObject);
 }
