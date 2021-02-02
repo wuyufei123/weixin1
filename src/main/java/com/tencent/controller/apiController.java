@@ -68,4 +68,10 @@ public class apiController {
     public JSONObject deleteChat(@RequestBody JSONObject jsonObject){
         return chartService.delete(jsonObject);
     }
+
+    //根据chartId查询用户信息
+    @RequestMapping("selectById")
+    public List  selectById(@RequestBody JSONObject jsonObject){
+        return chartService.selectById(jsonObject);
+    }
 }

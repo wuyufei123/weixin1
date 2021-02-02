@@ -9,40 +9,235 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/element-ui/2.4.9/index.js"></script>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
 
-    <style>
-        /*#top {*/
-        /*    !*background: #20A0FF;*!*/
-        /*    padding: 5px;*/
-        /*    !*overflow: hidden*!*/
-        /*}*/
-        /*.item .el-form-item_label{*/
-        /*    color: wheat;*/
-        /*}*/
-    </style>
 
 </head>
 <body>
 <div id="job">
-    <h1>123</h1>
+    <p style="text-align:center;padding-bottom: 20px">企业微信一键建群应用</p>
+    <el-container style="height: 500px; border: 1px solid #eee">
+        <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
+            <el-menu :default-openeds="['1', '3']">
+                <el-submenu index="index">
+                    <template slot="title" v-bind="nameTable" >群聊名称</template>
+                    <el-menu-item-group >
+                        <el-menu-item  v-for="(subItem,subIndex) in nameTable" @click="qunliao($event,subItem.userList,subItem.chatid)">{{subItem.name}}</el-menu-item>
+                    </el-menu-item-group>
+                </el-submenu>
+            </el-menu>
+        </el-aside>
+
+        <!--模态窗添加-->
+        <el-container>
+            <el-header style=" text-align: left; font-size: 12px">
+
+                <el-dialog :visible.sync="dialogVisible">
+                    <el-form :model="form">
+                        <p style="display:inline;width:20%">姓名</p>
+                        <el-input v-model="search_name" placeholder="输入姓名" maxlength="50"
+                                  style="width:20%;padding-bottom:12px;padding-left:30px;margin-right: 20px"></el-input>
+                        <p style="display:inline;width:10%">电话</p>
+                        <el-input v-model="search_mobile" placeholder="输入电话" maxlength="50"
+                                  style="width:20%;padding-bottom:12px;padding-left:30px;margin-right: 20px"></el-input>
+                        <el-button size="small" type="primary" plain @click="sousuo"
+                                   style="margin-right:20px;width:10%;height: 40px;">搜索
+                        </el-button>
+                        <br/>
+                        <!--<el-form-item label="姓名" :label-width="formLabelWidth">
+                            <el-input v-model="form.name" autocomplete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="手机号" :label-width="formLabelWidth">
+                            <el-input v-model="form.name" autocomplete="off"></el-input>
+                        </el-form-item>-->
+                    </el-form>
+                    <!--添加成员table-->
+                    <el-table :data="addUserTable"  @selection-change="changeCheckBoxValue">
+                        <el-table-column type="selection"></el-table-column>
+                        <el-table-column property="name" label="用户名称" width="150"></el-table-column>
+                        <el-table-column property="department" label="用户所在部门" width="200"></el-table-column>
+                        <el-table-column property="userid" label="用户ID"></el-table-column>
+                        <el-table-column prop="mobile" label="手机"></el-table-column>
+                    </el-table>
+                    </br>
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="submit()" >确 定</el-button>
+                </el-dialog>
+            </el-header>
+            <el-main>
+                <!--主页面table-->
+                <el-table :data="mainTable" >
+                    <el-table-column prop="name" label="用户名称">
+                    </el-table-column>
+                    <el-table-column prop="department" label="用户所在部门" >
+                    </el-table-column>
+                    <el-table-column prop="userid" label="用户ID" >
+                    </el-table-column>
+                    <el-table-column prop="mobile" label="手机">
+                    </el-table-column>
+                </el-table>
+                <el-button type="primary" @click="dialogVisible = true" maxlength="50"
+                           style="width:15%;padding-bottom:12px;padding-left:30px;margin-right: 20px">添加人员</el-button>
+                <el-button type="primary"  maxlength="50"
+                           style="width:15%;padding-bottom:12px;padding-left:30px;margin-right: 20px">解散群聊</el-button>
+
+            </el-main>
+
+        </el-container>
+    </el-container>
+
 </div>
 
 <footer align="center">
-    <p>&copy; 企业微信 一键建群页面demo</p>
+    <p>&copy; 企业微信 一键建群页面</p>
 </footer>
 
 <script>
     var vue = new Vue({
         el: "#job",
         data: {
-        },
-        methods: {
+            //选中的当前群聊value
+            thisValue:'',
+            //选中的当前id
+            thisChartId:'',
+            //群聊名
+            mainTable:[],
+            nameTable:[],
+            addUserTable:[],
+            //群名、群主表单数据
+            message_groupName: '',
+            message_owner: '',
+            //电话（搜索条件）
+            search_mobile: '',
+            //姓名（搜索条件）
+            search_name: '',
+            //群聊名称
+            chatid:'',
+            //复选框数据
+            checkBoxData: [],
+            //表格当前页数据
+            tableData: [],
+            gridData: [],
+            //请求的URL
+            url: 'api/userlist',
+            //默认每页数据量
+            pagesize: 2,
+            //当前页码
+            currentPage: 1,
+            //查询的页码
+            start: 1,
+            //默认数据总数
+            totalCount: 1000,
+            //添加对话框默认可见性
+            dialogVisible: false,
+            dialogFormVisible: false,
+            //修改对话框默认可见性
+            updateFormVisible: false,
+            createGroupForm: {
+                userlist: [],
+                groupName: '',
+                owner: ''
+            },
+            loading: false,
+            form: {
 
+            },
+            formLabelWidth: '120px',
+        },
+
+
+        methods: {
+            //更具chatid获取
+            qunliao:function(event,value,id){
+                //选中的当前id
+                this.thisChartId=id
+                this.thisValue=value
+                //请求后台
+                var param={"userIdList":value}
+                this.$http.post('api/selectById',param).then(function (res) {
+                    if(res.length!=0) {
+                        this.mainTable=res.data
+                        console.info(this.mainTable)
+                    }
+                }, function () {
+                    console.log('failed');
+                });
+            },
+            // 群聊名称查询
+            loadData: function (currentPage, pagesize) {
+                this.loading = true;
+                this.$http.get('api/getAllChart').then(function (res) {
+                    this.nameTable = res.body;
+                }).catch((e) => {
+                    console.log('failed');
+            })
+                ;
+                this.loading = true;
+                this.$http.get('api/userlist').then(function (res) {
+                    this.addUserTable = res.body.userlist;
+                    this.totalCount = this.addUserTable.length;  //res.body.data.total;
+                    this.loading = false;
+                }, function () {
+                    console.log('failed');
+                });
+            },
+            handleClose(done) {
+                this.$confirm('确认关闭？')
+                    .then(_ => {
+                    done();
+            })
+            .catch(_ => {
+                });
+            },
+            /*搜索框*/
+            sousuo:function () {
+                //请求后台
+                this.$http.get('api/search?name='+this.search_name+'&mobile='+this.search_mobile).then(function (res) {
+                    if(res.length!=0) {
+                        this.addUserTable = res.body.data;
+                        this.totalCount = this.tableData.length;  //res.body.data.total;
+                        this.loading = false;
+                    }
+                }, function () {
+                    console.log('failed');
+                });
+            },
+            //添加人员
+            submit:function () {
+                //关闭窗口
+                this.dialogVisible = false
+                var userlist = [];
+                this.checkBoxData.forEach(v =>{
+                    if (userlist.indexOf(v.userid)===-1){
+                    userlist.push(v.userid);
+                }
+            });
+                console.log(userlist);
+                this.$http.post('/api/addUserForChat',{
+                    add_user_list: userlist,
+                    chatId:this.thisChartId
+                }).then(function (res) {
+                    console.log(res.body.errcode);
+                    if (res.body.errcode === 0){
+                        //alert('邀请成功！');
+
+                    }else{
+                       // alert('邀请失败，请再次尝试');
+                    }
+                })
+
+                this.qunliao(null,this.thisValue,this.thisChartId)
+
+            },
+            // 获取复选框值
+            changeCheckBoxValue: function(val) {
+                this.checkBoxData = val;
+            },
         }
     });
-
     //载入数据
-  //  vue.loadData();
+    vue.loadData();
 </script>
+<style>
 
+</style>
 </body>
 </html>

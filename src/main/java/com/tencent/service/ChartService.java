@@ -9,4 +9,5 @@ public interface ChartService {
     List selectAllChart();
     JSONObject addUser(JSONObject jsonObject);
     JSONObject delete(JSONObject jsonObject);
+    List selectById(JSONObject jsonObject);
 }

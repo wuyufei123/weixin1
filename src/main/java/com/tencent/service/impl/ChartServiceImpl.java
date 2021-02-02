@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.constant.WeChatApiConstant;
 import com.tencent.mapper.ChartMapper;
+import com.tencent.mapper.DepartmentInfoMapper;
 import com.tencent.mapper.TokenMapper;
+import com.tencent.model.DepartmentInfo;
 import com.tencent.service.ChartService;
 import com.tencent.util.HttpClientHelper;
 import org.apache.http.HttpResponse;
@@ -39,6 +41,8 @@ public class ChartServiceImpl implements ChartService {
     HttpClientHelper httpClientHelper;
     @Autowired
     TokenMapper tokenMapper;
+    @Autowired
+    DepartmentInfoMapper departmentInfoMapper;
 
     @Override
     public List selectAllChart() {
@@ -147,6 +151,12 @@ public class ChartServiceImpl implements ChartService {
         return null;
     }
 
+    @Override
+    public List selectById(JSONObject jsonObject) {
+        resolveDepartmentName((List) jsonObject.get("userIdList"));
+        return (List) jsonObject.get("userIdList");
+    }
+
     public JSONObject searchUserInfo(String user) {
         String result = "";
         BufferedReader in = null;
@@ -241,6 +251,21 @@ public class ChartServiceImpl implements ChartService {
             }
         }
         return result;
+    }
+
+    //处理入库部门列表信息
+    private void resolveDepartmentName(List userlist) {
+        for (Object temp : userlist) {
+            Map user=(Map)temp;
+            List deptlist = new ArrayList();
+            for (Object t : (List) user.get("department")) {
+                DepartmentInfo departmentInfo = departmentInfoMapper.selectById((int) t);
+                deptlist.add(departmentInfo.getDepartmentName());
+            }
+            user.put("department", deptlist);
+//            log.info(user.toString());
+        }
+        log.info("完成处理，用户接口返回部门名称转换");
     }
 }
 
