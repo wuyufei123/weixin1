@@ -1,6 +1,5 @@
 package com.tencent.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.tencent.service.ApiService;
 import com.tencent.service.ChartService;
@@ -26,7 +25,7 @@ public class apiController {
         return "HelloWorld";
     }
 
-    //列出用户
+    //查询用户入库
     @GetMapping("/userlist")
     public JSONObject userList() {
         JSONObject result = apiService.getUserList();
@@ -44,10 +43,10 @@ public class apiController {
 
     //提供根据电话/用户姓名查询用户列表
     @RequestMapping("/search")
-    public JSONObject search(@RequestParam String name, @RequestParam String mobile) {
+    public JSONObject search(@RequestParam String name, @RequestParam String mobile,@RequestParam String department) {
         //查询user_list
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("data", listService.userListTemport(name, mobile));
+        jsonObject.put("data", listService.userListTemport(name, mobile,department));
         return jsonObject;
     }
 

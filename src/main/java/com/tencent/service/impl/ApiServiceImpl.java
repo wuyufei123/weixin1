@@ -196,15 +196,16 @@ public class ApiServiceImpl implements ApiService {
         return result;
     }
 
-
     //处理入库部门列表信息
     private void resolveDepartmentName(JSONArray userlist) {
         for (Object temp : userlist) {
             JSONObject user = (JSONObject) temp;
             JSONArray deptlist = new JSONArray();
             for (Object t : (JSONArray) user.get("department")) {
-                DepartmentInfo departmentInfo = departmentInfoMapper.selectById((int) t);
-                deptlist.add(departmentInfo.getDepartmentName());
+                DepartmentInfo departmentInfo = departmentInfoMapper.selectById((Integer) t);
+                if(departmentInfo!=null && departmentInfo.getName()!=null) {
+                    deptlist.add(departmentInfo.getName());
+                }
             }
             user.put("department", deptlist);
 //            log.info(user.toString());

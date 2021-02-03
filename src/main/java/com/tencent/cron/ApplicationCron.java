@@ -1,43 +1,48 @@
 package com.tencent.cron;
 
 import com.alibaba.fastjson.JSONObject;
+import com.tencent.WeixinApplication;
 import com.tencent.constant.WeChatApiConstant;
 import com.tencent.mapper.DepartmentInfoMapper;
 import com.tencent.mapper.TokenMapper;
 import com.tencent.model.DepartmentInfo;
+import com.tencent.service.ApiService;
 import com.tencent.util.HttpClientHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author: wuyufei
- * @Date: 2020/12/30 11:13
- * @Description: 定时更新部门信息
- */
-/*@Configuration
-@EnableScheduling*/
-public class DepartmentUpdateCron {
+@Component
+public class ApplicationCron implements ApplicationRunner {
+    @Autowired
+    ApiService apiService;
     @Autowired
     HttpClientHelper httpClientHelper;
     @Autowired
     TokenMapper tokenMapper;
     @Autowired
     DepartmentInfoMapper departmentInfoMapper;
-    public static final Logger logger = LoggerFactory.getLogger(HttpClientHelper.class);
 
-    //半小时同步一次
-    //@Scheduled(cron = "0 * * * * ? ")
+    private static final Logger LOG = LoggerFactory.getLogger(WeixinApplication.class);
+
+
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        LOG.info("==========开始调用用户列表===========");
+        DepartmentUpdate();
+        apiService.getUserList();
+    }
+
     public void DepartmentUpdate() {
         //删除旧数据
         departmentInfoMapper.delete();
-        JSONObject jsonObject = httpClientHelper.doHttpGet(WeChatApiConstant.DEPARMENTLIST + tokenMapper.getToken().getToken()+"&id=26069", "{}");
+        JSONObject jsonObject = httpClientHelper.doHttpGet(WeChatApiConstant.DEPARMENTLIST + tokenMapper.getToken().getToken()+WeChatApiConstant.DEPARMENTID, "{}");
         List<Map> info = (List) jsonObject.get("department");
         //遍历刷新入库
         for (Map a : info) {

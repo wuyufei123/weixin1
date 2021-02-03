@@ -260,7 +260,7 @@ public class ChartServiceImpl implements ChartService {
             List deptlist = new ArrayList();
             for (Object t : (List) user.get("department")) {
                 DepartmentInfo departmentInfo = departmentInfoMapper.selectById((int) t);
-                deptlist.add(departmentInfo.getDepartmentName());
+                deptlist.add(departmentInfo.getName());
             }
             user.put("department", deptlist);
 //            log.info(user.toString());

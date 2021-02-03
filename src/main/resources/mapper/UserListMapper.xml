@@ -8,6 +8,10 @@
       delete from user_list
     </delete>
     <select id="select" parameterType="String" resultType="com.tencent.model.UserListTemport">
-     select*from user_list where name like  '%${name}%' and mobile like  '%${mobile}%'
+     select * from user_list where name like  '%${name}%' and mobile like  '%${mobile}%'
+     <if test="param3!=null and param3!=''">
+     and department=#{param3}
+     </if>
+        order by department
     </select>
 </mapper>

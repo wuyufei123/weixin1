@@ -7,4 +7,5 @@ public interface ApiService {
 	JSONObject createChatGroup(JSONObject groupParam);
 
 	JSONObject sendMsgChatGroup(String chat_id);
+
 }

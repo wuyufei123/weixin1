@@ -9,5 +9,5 @@ import java.util.List;
 public interface UserListMapper {
     void UpdateList(UserListTemport userListTemport);
     void deleteAll();
-    List<UserListTemport> select(String name,String mobile);
+    List<UserListTemport> select(String name,String mobile,String userListTemport);
 }

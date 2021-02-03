@@ -139,8 +139,8 @@
             // 从服务器读取数据
             loadData: function (currentPage, pagesize) {
                 this.loading = true;
-                this.$http.get('api/userlist').then(function (res) {
-                    this.tableData = res.body.userlist;
+                this.$http.get('api/search?name=' + this.search_name + '&mobile=' + this.search_mobile + '&department=' + this.search_department).then(function (res) {
+                    this.tableData = res.body.data;
                     this.totalCount = this.tableData.length;  //res.body.data.total;
                     this.loading = false;
                 }, function () {

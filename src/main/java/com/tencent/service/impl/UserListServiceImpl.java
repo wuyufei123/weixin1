@@ -13,7 +13,7 @@ public class UserListServiceImpl implements UserListService {
     @Autowired
     UserListMapper userListMapper;
     @Override
-    public List<UserListTemport> userListTemport(String name,String mobile) {
-        return userListMapper.select(name,mobile);
+    public List<UserListTemport> userListTemport(String name,String mobile,String userListTemport) {
+        return userListMapper.select(name,mobile,userListTemport);
     }
 }
