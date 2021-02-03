@@ -223,9 +223,7 @@
                         // alert('邀请失败，请再次尝试');
                     }
                 })
-
-                this.$router.go(0);
-
+                window.location.reload();
             },
             // 获取复选框值
             changeCheckBoxValue: function(val) {
@@ -240,7 +238,7 @@
                 },function(error){
                     console.log('解散群聊失败');
                 })
-                this.$router.go(0);
+                window.location.reload();
             }
         }
     });

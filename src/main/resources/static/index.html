@@ -24,29 +24,39 @@
 <body>
 <div id="job">
     <p style="text-align:center;padding-bottom: 20px">企业微信一键建群应用</p>
-    <div style="text-align:center">
-        <p style="display:inline;width:20%">电话</p>
-        <el-input v-model="search_mobile" placeholder="输入电话，可为空" maxlength="50" style="width:22%;text-align:center;padding-bottom:12px;padding-left:10px;margin-right: 20px"></el-input>
+    <div style="">
         <p style="display:inline;width:20%">姓名</p>
-        <el-input v-model="search_name" placeholder="输入姓名，可为空" maxlength="50" style="width:22%;text-align:center;padding-bottom:12px;padding-left:20px"></el-input>
-        <br/>
-        <el-button size="small" type="primary" plain @click="searchByMobleAndName"  style="margin-bottom:12px;margin-left:50px;width:50%">搜索</el-button>
-        <br/>
+        <el-input v-model="search_name" placeholder="输入姓名，可为空" maxlength="50"
+                  style="width:20%;padding-bottom:12px;padding-left:30px;margin-right: 20px"></el-input>
+        <p style="display:inline;width:20%">电话</p>
+        <el-input v-model="search_mobile" placeholder="输入电话，可为空" maxlength="50"
+                  style="width:20%;padding-bottom:12px;padding-left:30px;margin-right: 20px"></el-input>
+        <p style="display:inline;width:20%">部门</p>
+        <el-input v-model="search_department" placeholder="输入部门，可为空" maxlength="50"
+                  style="width:20%;padding-bottom:12px;padding-left:10px;margin-right: 20px"></el-input>
+        <el-button size="small" type="primary" plain @click="searchByMobleAndName"
+                   style="margin-right:5px;width:10%;height: 40px;">搜索
+        </el-button>
+        <br/><br/>
         <p style="display:inline;width:20%">设置群名</p>
-        <el-input v-model="message_groupName" placeholder="输入群名称" maxlength="50"  style="width:50%;text-align:center;padding-bottom:12px;padding-right:20px"></el-input>
-        <br/>
+        <el-input v-model="message_groupName" placeholder="输入群名称" maxlength="50"
+                  style="width:20%;text-align:center;padding-bottom:12px;padding-right:20px"></el-input>
         <p style="display:inline;width:20%">设置群主</p>
-        <el-input v-model="message_owner" placeholder="输入群主用户id，可为空" style="width:50%;text-align:center;padding-bottom:12px;padding-right:20px"></el-input>
-<!--        <el-button size="small" type="primary" plain @click="search" :loading="loading" icon="el-icon-search">查询</el-button>-->
-        <br/>
-        <el-button size="small" type="primary" plain @click="submit" icon="el-icon-plus" style="margin-bottom:12px;margin-left:50px;width:50%">确认建群</el-button>
+        <el-input v-model="message_owner" placeholder="输入群主用户id，可为空" maxlength="50"
+                  style="width:20%;text-align:center;padding-bottom:12px;padding-right:20px"></el-input>
+        <!--        <el-button size="small" type="primary" plain @click="search" :loading="loading" icon="el-icon-search">查询</el-button>-->
+        <el-button size="small" type="primary" plain @click="submit" icon="el-icon-plus"
+                   style="margin-bottom:12px;margin-right:5px;width:10%;height: 40px;">确认建群
+        </el-button>
     </div>
     <br/>
     <div>
-        <el-table ref="jobTable" :data="tableData" style="width:100%" @selection-change="changeCheckBoxValue" border center>
-            <el-table-column type="selection" ></el-table-column>
+        <el-table ref="jobTable" :data="tableData" style="width:100%" @selection-change="changeCheckBoxValue" border
+                  center>
+            <el-table-column type="selection"></el-table-column>
             <el-table-column prop="name" label="用户名称" show-overflow-tooltip align="center"></el-table-column>
-            <el-table-column prop="department" label="用户所在部门" sortable align="center"> <!--:formatter="formatState"--></el-table-column>
+            <el-table-column prop="department" label="用户所在部门" sortable align="center">
+                <!--:formatter="formatState"--></el-table-column>
             <el-table-column prop="userid" label="用户ID" align="center"></el-table-column>
             <el-table-column prop="mobile" label="手机" align="center"></el-table-column>
         </el-table>
@@ -65,9 +75,10 @@
             message_groupName: '',
             message_owner: '',
             //电话（搜索条件）
-            search_mobile:'',
+            search_mobile: '',
             //姓名（搜索条件）
-            search_name:'',
+            search_name: '',
+            search_department: '',
             //复选框数据
             checkBoxData: [],
             //表格当前页数据
@@ -86,7 +97,7 @@
             dialogFormVisible: false,
             //修改对话框默认可见性
             updateFormVisible: false,
-            createGroupForm:{
+            createGroupForm: {
                 userlist: [],
                 groupName: '',
                 owner: ''
@@ -94,10 +105,10 @@
             loading: false
         },
         methods: {
-            searchByMobleAndName:function(){
+            searchByMobleAndName: function () {
                 //请求后台
-                this.$http.get('api/search?name='+this.search_name+'&mobile='+this.search_mobile).then(function (res) {
-                    if(res.length!=0) {
+                this.$http.get('api/search?name=' + this.search_name + '&mobile=' + this.search_mobile + '&department=' + this.search_department).then(function (res) {
+                    if (res.length != 0) {
                         this.tableData = res.body.data;
                         this.totalCount = this.tableData.length;  //res.body.data.total;
                         this.loading = false;
@@ -107,13 +118,13 @@
                 });
             },
             // 获取复选框值
-            changeCheckBoxValue: function(val) {
+            changeCheckBoxValue: function (val) {
                 this.checkBoxData = val;
             },
             // 格式化状态
             formatState: function (row, column, cellValue, index) {
                 // console.log(row.department);
-                if (row.department.length>1){
+                if (row.department.length > 1) {
                     return row.department.join(";");
                 } else {
                     return row.department[0];
@@ -142,28 +153,35 @@
             },
             //提交创建群聊数据
             submit: function () {
-                console.log(this.message);
-                console.log(this.checkBoxData);
-                var userlist = [];
-                this.checkBoxData.forEach(v =>{
-                    if (userlist.indexOf(v.userid)===-1){
+                if (this.message_groupName != null && this.message_groupName != '') {
+                    console.log(this.message);
+                    console.log(this.checkBoxData);
+                    var userlist = [];
+                    this.checkBoxData.forEach(v => {
+                        if(userlist.indexOf(v.userid) === -1
+                )
+                    {
                         userlist.push(v.userid);
                     }
-                });
-                console.log(userlist);
-                this.$http.post('/api/createChat',{
-                    userlist: userlist,
-                    groupName: this.message_groupName,
-                    owner: this.message_owner
-                }).then(function (res) {
-                    console.log(res.body);
-                    if (res.body.errcode === 0){
-                        alert('您已创建群聊成功！');
-                        vue.loadData();
-                    }else{
-                        alert('创建群聊失败，请再次尝试');
-                    }
                 })
+                    ;
+                    console.log(userlist);
+                    this.$http.post('/api/createChat', {
+                        userlist: userlist,
+                        groupName: this.message_groupName,
+                        owner: this.message_owner
+                    }).then(function (res) {
+                        console.log(res.body);
+                        if (res.body.errcode === 0) {
+                            alert('您已创建群聊成功！');
+                            vue.loadData();
+                        } else {
+                            alert('创建群聊失败，请再次尝试');
+                        }
+                    })
+                }else{
+                    alert("群名不能为空")
+                }
             }
         }
     });
