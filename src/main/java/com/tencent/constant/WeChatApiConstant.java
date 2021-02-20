@@ -13,10 +13,10 @@ public class WeChatApiConstant {
     //用户列表头(全量)
     public static final String USERLISTSTART = "https://qyapi.weixin.qq.com/cgi-bin/user/list?access_token=";
     //用户列表尾
-    //public static final String USERLISTEND = "&department_id=26069&fetch_child=1";
-    public static final String USERLISTEND = "&department_id=26069&fetch_child=1";
+    public static final String USERLISTEND = "&department_id=1&fetch_child=1";
+   // public static final String USERLISTEND = "&department_id=26069&fetch_child=1";
     //部门id
-    public static final String DEPARMENTID = "&id=26069";
+    public static final String DEPARMENTID = "&id=1";
     //创建群聊
     public static final String CREATEGROUP = "https://qyapi.weixin.qq.com/cgi-bin/appchat/create?access_token=";
     //进入群聊发送一段话

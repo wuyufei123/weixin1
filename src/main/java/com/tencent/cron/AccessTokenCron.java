@@ -26,8 +26,8 @@ import java.util.Map;
 public class AccessTokenCron {
     public static final Logger logger = LoggerFactory.getLogger(HttpClientHelper.class);
     //获取token接口
-    public static final String GETTOKEN = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxe8c2710f51e9ee56&corpsecret=r9E3qkMqqstMP_MRrMlk3GlZqLEwM5inGEmY1_Lp1QI";
-    //public static final String GETTOKEN = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww353786818bbff142&corpsecret=dCG2rGujuYvbyMzBFikNglg0Y1YQAplu1B8oDp4XTMQ";
+    //public static final String GETTOKEN = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=wxe8c2710f51e9ee56&corpsecret=r9E3qkMqqstMP_MRrMlk3GlZqLEwM5inGEmY1_Lp1QI";
+    public static final String GETTOKEN = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=ww353786818bbff142&corpsecret=dCG2rGujuYvbyMzBFikNglg0Y1YQAplu1B8oDp4XTMQ";
     @Autowired
     TokenMapper tokenMapper;
     @Autowired
